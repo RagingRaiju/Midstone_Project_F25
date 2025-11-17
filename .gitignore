@@ -426,4 +426,4 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-GAME211_StudentTemplate/GAME211_StudentTemplate.vcxproj
+*.vcxproj
