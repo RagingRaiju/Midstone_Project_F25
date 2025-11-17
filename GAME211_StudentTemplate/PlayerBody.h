@@ -57,7 +57,17 @@ public:
     bool OnCreate();
     void Render( float scale = 1.0f );
     void HandleEvents( const SDL_Event& event );
-    void Update( float deltaTime );    
+    void Update( float deltaTime ); 
+
+    // Tweakables
+    float moveAccel = 80.0f;   // how strong the acceleration feels
+
+    // Input state from events
+    bool moveUp = false;
+    bool moveDown = false;
+    bool moveLeft = false;
+    bool moveRight = false;
+
 };
 
 #endif /* PLAYERBODY_H */

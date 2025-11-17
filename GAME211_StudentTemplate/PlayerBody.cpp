@@ -52,15 +52,44 @@ void PlayerBody::Render( float scale )
         orientationDegrees, nullptr, SDL_FLIP_NONE );
 }
 
-void PlayerBody::HandleEvents( const SDL_Event& event )
+void PlayerBody::HandleEvents(const SDL_Event& event)
 {
+    if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
+        switch (event.key.scancode) {
+        case SDL_SCANCODE_W: moveUp = true;  break;
+        case SDL_SCANCODE_S: moveDown = true;  break;
+        case SDL_SCANCODE_A: moveLeft = true;  break;
+        case SDL_SCANCODE_D: moveRight = true;  break;
+        default: break;
+        }
+    }
+    else if (event.type == SDL_EVENT_KEY_UP && !event.key.repeat) {
+        switch (event.key.scancode) {
+        case SDL_SCANCODE_W: moveUp = false; break;
+        case SDL_SCANCODE_S: moveDown = false; break;
+        case SDL_SCANCODE_A: moveLeft = false; break;
+        case SDL_SCANCODE_D: moveRight = false; break;
+        default: break;
+        }
+    }
 }
 
-void PlayerBody::Update( float deltaTime )
+
+void PlayerBody::Update(float deltaTime)
 {
-    // Update position, call Update from base class
-    // Note that would update velocity too, and rotation motion
+    // Start with no acceleration each frame
+    accel = Vec3(0.0f, 0.0f, 0.0f);
 
-    Body::Update( deltaTime );
+    // 2D game: use x/y, z = 0
+    // You said: W should be "upwards (y+)"
+    if (moveUp)    accel.y += moveAccel;   // up (y+)
+    if (moveDown)  accel.y -= moveAccel;   // down (y-)
+    if (moveLeft)  accel.x -= moveAccel;   // left (x-)
+    if (moveRight) accel.x += moveAccel;   // right (x+)
 
+    // simple damping so you don't accelerate forever
+    vel *= 0.925f;
+
+    // Integrate pos/vel/orientation using current accel, rotation, etc.
+    Body::Update(deltaTime);
 }
