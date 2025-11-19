@@ -17,15 +17,22 @@
 #include "Body.h"
 #include "GameManager.h"
 
+#include "Weapon.h"
+#include "Pistol.h"
+#include "Knife.h"
+
 class PlayerBody : public Body
 {
 protected:
     class GameManager* game;
-
+private:
+    void InitWeapons();
 public:
     PlayerBody() : Body{}
     {
         game = nullptr;
+        InitWeapons();
+
     }
 
     // Note the last parameter in this constructor!
@@ -50,8 +57,21 @@ public:
         , angular_
     }
         , game{ game_ }
-    {}
+    {
+        InitWeapons();
+    }
+
+    ~PlayerBody() {
+        for (int i = 0; i < 3; ++i) {
+            delete weapons[i];
+            weapons[i] = nullptr;
+        }
+    }
     
+    // Weapons: 3 slots
+    Weapon* weapons[3] = { nullptr, nullptr, nullptr };
+    int currentWeaponIndex = 0;
+
     // use the base class versions of getters
 
     bool OnCreate();
@@ -67,7 +87,6 @@ public:
     bool moveDown = false;
     bool moveLeft = false;
     bool moveRight = false;
-
 };
 
 #endif /* PLAYERBODY_H */

@@ -6,16 +6,27 @@
 
 #include "PlayerBody.h"
 
-bool PlayerBody::OnCreate()
-{
-    image = IMG_Load( "Pacman.png" );
-    SDL_Renderer *renderer = game->getRenderer();
-    texture = SDL_CreateTextureFromSurface( renderer, image );
+bool PlayerBody::OnCreate() {
+    image = IMG_Load("Pacman.png");
     if (image == nullptr) {
         std::cerr << "Can't open the image" << std::endl;
         return false;
     }
+
+    SDL_Renderer* renderer = game->getRenderer();
+    texture = SDL_CreateTextureFromSurface(renderer, image);
+    if (!texture) {
+        std::cerr << "Failed to create texture\n";
+        return false;
+    }
     return true;
+}
+
+void PlayerBody::InitWeapons() {
+    weapons[0] = nullptr;          // main slot (1)
+    weapons[1] = new Pistol(this); // 2
+    weapons[2] = new Knife(this);  // 3
+    currentWeaponIndex = 1;        // start with pistol for example
 }
 
 void PlayerBody::Render( float scale )
@@ -60,6 +71,12 @@ void PlayerBody::HandleEvents(const SDL_Event& event)
         case SDL_SCANCODE_S: moveDown = true;  break;
         case SDL_SCANCODE_A: moveLeft = true;  break;
         case SDL_SCANCODE_D: moveRight = true;  break;
+
+        // Weapon slot switching
+        case SDL_SCANCODE_1: currentWeaponIndex = 0; break;
+        case SDL_SCANCODE_2: currentWeaponIndex = 1; break;
+        case SDL_SCANCODE_3: currentWeaponIndex = 2; break;
+
         default: break;
         }
     }
@@ -72,16 +89,19 @@ void PlayerBody::HandleEvents(const SDL_Event& event)
         default: break;
         }
     }
-}
 
+    // after handling movement / switching:
+    Weapon* active = weapons[currentWeaponIndex];
+    if (active) {
+        active->HandleEvents(event);
+    }
+}
 
 void PlayerBody::Update(float deltaTime)
 {
     // Start with no acceleration each frame
     accel = Vec3(0.0f, 0.0f, 0.0f);
 
-    // 2D game: use x/y, z = 0
-    // You said: W should be "upwards (y+)"
     if (moveUp)    accel.y += moveAccel;   // up (y+)
     if (moveDown)  accel.y -= moveAccel;   // down (y-)
     if (moveLeft)  accel.x -= moveAccel;   // left (x-)
@@ -90,6 +110,11 @@ void PlayerBody::Update(float deltaTime)
     // simple damping so you don't accelerate forever
     vel *= 0.925f;
 
-    // Integrate pos/vel/orientation using current accel, rotation, etc.
+    /* UPDATE METHODS RUN UNDER HERE */
+    for (int i = 0; i < 3; ++i) {
+        if (weapons[i]) {
+            weapons[i]->Update(deltaTime);
+        }
+    }
     Body::Update(deltaTime);
 }

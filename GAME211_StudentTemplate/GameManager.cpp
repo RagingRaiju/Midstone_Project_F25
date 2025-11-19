@@ -122,7 +122,7 @@ void GameManager::handleEvents()
             case SDL_SCANCODE_DELETE:
                 isRunning = false;
                 break;
-            case SDL_SCANCODE_1:
+            case SDL_SCANCODE_0: // I made this 0 instead of 1 for conflicting keybinds with the player weapon handling. (Shayan)
                 LoadScene(1);
                 break;
             default:
