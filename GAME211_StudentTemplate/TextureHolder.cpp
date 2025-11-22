@@ -1,4 +1,4 @@
-#include "TextureHolder.h"
+﻿#include "TextureHolder.h"
 #include <assert.h>
 
 TextureHolder* TextureHolder::textureHolderInstance = nullptr;
@@ -17,23 +17,23 @@ SDL_Texture* TextureHolder::GetTexture(std::string const& filename, SDL_Renderer
 	}
 
 	else {
-		// SFML Book Code
-		// auto& texture = m[filename];
-		//texture.loadFromFile(filename);
-		//return texture;
-
-		// My code
-
 		SDL_Surface* image = IMG_Load(filename.c_str());
-		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
-		if (image) {
-			SDL_DestroySurface(image);
+		if (!image) {
+			// Log error
+			SDL_Log("Failed to load image: %s", filename.c_str());
+			return nullptr;
 		}
+		SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
+		SDL_DestroySurface(image);
 		m[filename] = texture;
 		return texture;
 	}
 }
 
-TextureHolder::~TextureHolder()
-{
+TextureHolder::~TextureHolder() {
+	auto& m = textureHolderInstance->mapTextures;
+	for (auto& pair : m) {
+		SDL_DestroyTexture(pair.second);
+	}
+	m.clear();
 }
