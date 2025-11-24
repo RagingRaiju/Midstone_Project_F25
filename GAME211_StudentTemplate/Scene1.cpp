@@ -74,15 +74,15 @@ void Scene1::Render() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 
-	// render the player
-	game->RenderPlayer(0.5f);
-
-	// Draw bullets
+	// Draw bullets under player
 	for (Bullet* b : bullets) {
 		if (b) {
 			b->Render(renderer, getProjectionMatrix());
 		}
 	}
+
+	// render the player
+	game->RenderPlayer(0.5f);
 
 	SDL_RenderPresent(renderer);
 }
