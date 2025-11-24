@@ -19,6 +19,12 @@ private:
 
 	// BULLETS HANDLED BY SCENE (for cleanup, collisions, etc.)
 	std::vector<Bullet*> bullets;
+
+	// custom camera system to follow player around
+	const float followSpeed = 8.0f;
+	Matrix4 viewportMatrix;   // stores NDC->screen transform
+	Vec3 cameraCenter;
+	void UpdateCamera(float deltaTime);
 public:
 	// This constructor may be different from what you've seen before
 	// Notice the second parameter, and look in GameManager.cpp

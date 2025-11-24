@@ -11,32 +11,40 @@ Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
 }
 
 Scene1::~Scene1(){
-	for (Bullet* b : bullets) {
-		delete b;
-	}
+	for (Bullet* b : bullets) delete b;
 	bullets.clear();
 }
 
 bool Scene1::OnCreate() {
 	int w, h;
-	SDL_GetWindowSize(window,&w,&h);
+	SDL_GetWindowSize(window, &w, &h);
 
-	Matrix4 ndc = MMath::viewportNDC(w, h);
-	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
-	projectionMatrix = ndc * ortho;
+	// keep this around
+	viewportMatrix = MMath::viewportNDC(w, h);
+
+	// initial camera center at player
+	PlayerBody* player = game->getPlayer();
+	if (player) {
+		cameraCenter = player->getPos();
+	}
+	else {
+		cameraCenter = Vec3(0.0f, 0.0f, 0.0f);
+	}
+
+	// build an initial projection
+	float halfW = xAxis * 0.5f;
+	float halfH = yAxis * 0.5f;
+
+	float left = cameraCenter.x - halfW;
+	float right = cameraCenter.x + halfW;
+	float bottom = cameraCenter.y - halfH;
+	float top = cameraCenter.y + halfH;
+
+	Matrix4 ortho = MMath::orthographic(left, right, bottom, top, 0.0f, 1.0f);
+	projectionMatrix = viewportMatrix * ortho;
 
 	/// Turn on the SDL imaging subsystem
 	//IMG_Init(IMG_INIT_PNG);
-
-	// Set player image to PacMan
-
-	SDL_Surface* image;
-	SDL_Texture* texture;
-
-	image = IMG_Load("pacman.png");
-	texture = SDL_CreateTextureFromSurface(renderer, image);
-	game->getPlayer()->setImage(image);
-	game->getPlayer()->setTexture(texture);
 
 	return true;
 }
@@ -44,7 +52,6 @@ bool Scene1::OnCreate() {
 void Scene1::OnDestroy() {}
 
 void Scene1::Update(const float deltaTime) {
-
 	// Update player
 	game->getPlayer()->Update(deltaTime);
 
@@ -68,6 +75,31 @@ void Scene1::Update(const float deltaTime) {
 			}),
 		bullets.end()
 	);
+
+	UpdateCamera(deltaTime);
+}
+
+void Scene1::UpdateCamera(float deltaTime) {
+	PlayerBody* player = game->getPlayer();
+	if (!player) return;
+
+	Vec3 target = player->getPos();
+
+	// smooth follow
+	cameraCenter += (target - cameraCenter) * followSpeed * deltaTime;
+
+	float halfW = xAxis * 0.5f;
+	float halfH = yAxis * 0.5f;
+
+	float left = cameraCenter.x - halfW;
+	float right = cameraCenter.x + halfW;
+	float bottom = cameraCenter.y - halfH;
+	float top = cameraCenter.y + halfH;
+
+	Matrix4 ortho = MMath::orthographic(left, right, bottom, top, 0.0f, 1.0f);
+
+	// IMPORTANT: keep viewport transform
+	projectionMatrix = viewportMatrix * ortho;
 }
 
 void Scene1::Render() {
