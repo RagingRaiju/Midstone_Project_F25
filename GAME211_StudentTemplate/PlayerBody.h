@@ -1,9 +1,6 @@
-//
-//  PlayerBody.h
-//  DemoAI
-//
-//  Created by Gail Harris on 2021-Dec-23.
-//
+/*
+*   Complete remake player class by Shayan Hamayun
+*/
 
 #ifndef PLAYERBODY_H
 #define PLAYERBODY_H
@@ -18,8 +15,10 @@
 #include "GameManager.h"
 
 #include "Weapon.h"
-#include "Pistol.h"
+#include "Handgun.h"
 #include "Knife.h"
+
+#include "SpriteAnimation.h"
 
 class PlayerBody : public Body
 {
@@ -27,6 +26,44 @@ protected:
     class GameManager* game;
 private:
     void InitWeapons();
+    void UpdateAimFromMouse();
+
+    // Weapons: 3 slots
+    Weapon* weapons[3] = { nullptr, nullptr, nullptr };
+    int currentWeaponIndex = 0;
+
+    // Stats
+    float moveAccel = 80.0f;   // how strong the acceleration feels
+
+    // Animations
+    SpriteAnimation feetIdleAnim;
+    SpriteAnimation feetRunAnim;
+
+    SpriteAnimation handgunIdleAnim;
+    SpriteAnimation handgunShootAnim;
+
+    SpriteAnimation knifeIdleAnim;
+    SpriteAnimation knifeMeleeAnim;
+
+    SpriteAnimation* activeFeetAnim = nullptr;
+    SpriteAnimation* activeWeaponAnim = nullptr;
+
+    // Weapon visual state
+    enum class WeaponVisualState {
+        Idle,
+        Shooting,
+        Melee
+    };
+    WeaponVisualState weaponVisualState = WeaponVisualState::Idle;
+    float weaponVisualTimer = 0.0f;
+    float weaponVisualDuration = 0.0f;
+
+    // Debug shot line
+    bool showShotRay = false;
+    float shotRayTimer = 0.0f;
+    Vec3  shotStart;
+    Vec3  shotEnd;
+
 public:
     PlayerBody() : Body{}
     {
@@ -67,10 +104,8 @@ public:
             weapons[i] = nullptr;
         }
     }
-    
-    // Weapons: 3 slots
-    Weapon* weapons[3] = { nullptr, nullptr, nullptr };
-    int currentWeaponIndex = 0;
+
+    GameManager* GetGameManager() const { return game; }
 
     // use the base class versions of getters
 
@@ -79,8 +114,11 @@ public:
     void HandleEvents( const SDL_Event& event );
     void Update( float deltaTime ); 
 
-    // Tweakables
-    float moveAccel = 80.0f;   // how strong the acceleration feels
+    // Weapon stuff
+    void OnPistolFired();
+    void OnKnifeMelee();
+    void RegisterShotRay(const Vec3& start, const Vec3& end);
+    void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);
 
     // Input state from events
     bool moveUp = false;

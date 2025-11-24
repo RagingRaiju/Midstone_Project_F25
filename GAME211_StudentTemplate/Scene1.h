@@ -4,6 +4,8 @@
 #include <SDL_image.h>
 #include <MMath.h>
 #include "Scene.h"
+#include <vector>
+#include "Bullet.h"
 
 using namespace MATH;
 class Scene1 : public Scene {
@@ -15,6 +17,8 @@ private:
 	Matrix4 projectionMatrix;	// set in OnCreate()
     Matrix4     inverseProjection;	// set in OnCreate()
 
+	// BULLETS HANDLED BY SCENE (for cleanup, collisions, etc.)
+	std::vector<Bullet*> bullets;
 public:
 	// This constructor may be different from what you've seen before
 	// Notice the second parameter, and look in GameManager.cpp
@@ -31,6 +35,8 @@ public:
 	SDL_Window* getWindow() { return window; }
     Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
+
+	void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);
 };
 
 #endif

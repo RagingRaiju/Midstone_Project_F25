@@ -20,24 +20,28 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Body.cpp" />
+    <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Pistol.cpp" />
+    <ClCompile Include="Handgun.cpp" />
     <ClCompile Include="PlayerBody.cpp" />
     <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
+    <ClInclude Include="Bullet.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="Knife.h" />
-    <ClInclude Include="Pistol.h" />
+    <ClInclude Include="Handgun.h" />
     <ClInclude Include="PlayerBody.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
+    <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Weapon.h" />
@@ -97,7 +101,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\GameDev\MathLibrary\include;C:\GameDev\SDL\include\SDL3;C:\GameDev\SDL\include;C:\GameDev\OpenGL\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\GameDevMidstone\MathLibrary\include;C:\GameDevMidstone\SDL\include\SDL3;C:\GameDevMidstone\SDL\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(IncludePath)</IncludePath>
@@ -111,12 +115,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\GameDev\MathLibrary\include;C:\GameDev\SDL\include\SDL3;C:\GameDev\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDevMidstone\MathLibrary\include;C:\GameDevMidstone\SDL\include\SDL3;C:\GameDevMidstone\SDL\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard_C>Default</LanguageStandard_C>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\GameDev\SDL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\GameDevMidstone\SDL\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2_mixer.lib;SDL2_net.lib;SDL3.lib;SDL3_image.lib;SDL3_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

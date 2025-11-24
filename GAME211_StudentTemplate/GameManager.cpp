@@ -74,23 +74,50 @@ bool GameManager::OnCreate() {
 	return true;
 }
 
+void GameManager::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed) {
+    Scene1* s1 = dynamic_cast<Scene1*>(currentScene);
+    if (s1) {
+        s1->SpawnBullet(startPos, dir, speed);
+    }
+}
 
 /// Here's the whole game loop
 void GameManager::Run() {
-    
-	timer->Start();
-    
-	while (isRunning) {
-        
-        handleEvents();
-		timer->UpdateFrameTicks();
-        currentScene->Update(timer->GetDeltaTime());
-		currentScene->Render();
 
-		/// Keep the event loop running at a proper rate
-		SDL_Delay(timer->GetSleepTime(60)); ///60 frames per sec
-	}
+    const float FIXED_DT = 1.0f / 60.0f;   // 60 Hz physics
+    float accumulator = 0.0f;
+
+    timer->Start();
+
+    while (isRunning) {
+
+        handleEvents();
+
+        // Measure time since last frame
+        timer->UpdateFrameTicks();
+        float frameTime = timer->GetDeltaTime();
+
+        // Clamp to avoid spiral of death if the window stalls
+        if (frameTime > 0.25f) {
+            frameTime = 0.25f;
+        }
+
+        accumulator += frameTime;
+
+        // Step physics in fixed-size chunks
+        while (accumulator >= FIXED_DT) {
+            currentScene->Update(FIXED_DT);
+            accumulator -= FIXED_DT;
+        }
+
+        // Render as often as possible
+        currentScene->Render();
+
+        // tiny sleep so we don't peg the CPU at 100%
+        SDL_Delay(1);
+    }
 }
+
 
 void GameManager::handleEvents() 
 {

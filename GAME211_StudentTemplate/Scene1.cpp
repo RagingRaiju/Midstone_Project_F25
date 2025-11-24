@@ -11,6 +11,10 @@ Scene1::Scene1(SDL_Window* sdlWindow_, GameManager* game_){
 }
 
 Scene1::~Scene1(){
+	for (Bullet* b : bullets) {
+		delete b;
+	}
+	bullets.clear();
 }
 
 bool Scene1::OnCreate() {
@@ -43,6 +47,27 @@ void Scene1::Update(const float deltaTime) {
 
 	// Update player
 	game->getPlayer()->Update(deltaTime);
+
+	// Update bullets
+	for (Bullet* b : bullets) {
+		if (b) {
+			b->Update(deltaTime);
+		}
+	}
+
+	// Remove dead bullets
+	bullets.erase(
+		std::remove_if(bullets.begin(), bullets.end(),
+			[](Bullet* b) {
+				if (!b) return true;
+				if (!b->IsAlive()) {
+					delete b;
+					return true;
+				}
+				return false;
+			}),
+		bullets.end()
+	);
 }
 
 void Scene1::Render() {
@@ -50,7 +75,14 @@ void Scene1::Render() {
 	SDL_RenderClear(renderer);
 
 	// render the player
-	game->RenderPlayer(0.10f);
+	game->RenderPlayer(0.5f);
+
+	// Draw bullets
+	for (Bullet* b : bullets) {
+		if (b) {
+			b->Render(renderer, getProjectionMatrix());
+		}
+	}
 
 	SDL_RenderPresent(renderer);
 }
@@ -59,4 +91,10 @@ void Scene1::HandleEvents(const SDL_Event& event)
 {
 	// send events to player as needed
 	game->getPlayer()->HandleEvents(event);
+}
+
+void Scene1::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed) {
+	const float bulletLife = 2.0f; // seconds, can later be per-weapon too
+
+	bullets.push_back(new Bullet(startPos, dir, speed, bulletLife));
 }

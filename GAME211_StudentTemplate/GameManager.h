@@ -41,6 +41,7 @@ public:
 	bool OnCreate();
 	void OnDestroy();
 
+	void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);
 
 	// These might be unfamiliar
 	float getSceneHeight();

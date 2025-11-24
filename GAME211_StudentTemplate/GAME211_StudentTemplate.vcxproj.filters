@@ -42,7 +42,7 @@
     <ClCompile Include="Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pistol.cpp">
+    <ClCompile Include="Handgun.cpp">
       <Filter>Source Files\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="Knife.cpp">
@@ -50,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="TextureHolder.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteAnimation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Bullet.cpp">
+      <Filter>Source Files\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,7 +83,7 @@
     <ClInclude Include="Weapon.h">
       <Filter>Header Files\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="Pistol.h">
+    <ClInclude Include="Handgun.h">
       <Filter>Header Files\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Knife.h">
@@ -85,6 +91,12 @@
     </ClInclude>
     <ClInclude Include="TextureHolder.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullet.h">
+      <Filter>Header Files\Weapons</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
