@@ -41,6 +41,7 @@ private:
 
     SpriteAnimation handgunIdleAnim;
     SpriteAnimation handgunShootAnim;
+    SpriteAnimation handgunReloadAnim;
 
     SpriteAnimation knifeIdleAnim;
     SpriteAnimation knifeMeleeAnim;
@@ -52,6 +53,7 @@ private:
     enum class WeaponVisualState {
         Idle,
         Shooting,
+        Reload,
         Melee
     };
     WeaponVisualState weaponVisualState = WeaponVisualState::Idle;
@@ -116,6 +118,8 @@ public:
 
     // Weapon stuff
     void OnPistolFired();
+    void OnPistolReload();
+
     void OnKnifeMelee();
     void RegisterShotRay(const Vec3& start, const Vec3& end);
     void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);

@@ -3,11 +3,47 @@
 #include "PlayerBody.h"
 #include <iostream>
 
+void Handgun::Reload() {
+    if (reloading) return; // return if its already reloading
+    if (magRemaining == magSize) return;
+
+    reloading = true;
+    timeSinceInitatedReload = 0.0f;
+    owner->OnPistolReload();
+}
+
+void Handgun::Update(float deltaTime) {
+    // base Weapon cooldown
+    Weapon::Update(deltaTime);
+
+    // handle reload timing
+    if (reloading) {
+        timeSinceInitatedReload += deltaTime;
+
+        if (timeSinceInitatedReload >= reloadTime) {
+            // reload finished
+            magRemaining = magSize;
+            reloading = false;
+            timeSinceInitatedReload = 0.0f;
+        }
+    }
+}
+
 void Handgun::Fire() {
     if (!owner) return;
 
+    // can’t fire while reloading
+    if (reloading) return;
+
+    // out of ammo? start reload on first attempt
+    if (magRemaining <= 0) {
+        Reload();
+        return;
+    }
+
     // Trigger shoot animation
     owner->OnPistolFired();
+    magRemaining--; // deduct bullet for shot
 
     Vec3 origin = owner->getPos();
     float bodyAngle = owner->getOrientation();   // radians
@@ -65,4 +101,17 @@ void Handgun::Fire() {
     // float maxDist = 50.0f;
     // Vec3 end = origin + dir * maxDist;
     // owner->RegisterShotRay(origin, end);
+}
+
+void Handgun::HandleEvents(const SDL_Event& event) {
+    // Let base class handle left-click firing, etc.
+    Weapon::HandleEvents(event);
+
+    // Extra handgun-specific input (e.g. reload on R)
+    if (event.type == SDL_EVENT_KEY_DOWN &&
+        !event.key.repeat &&
+        event.key.scancode == SDL_SCANCODE_R)
+    {
+        Reload();
+    }
 }
