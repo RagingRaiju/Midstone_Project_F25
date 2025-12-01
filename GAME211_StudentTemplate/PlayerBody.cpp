@@ -14,21 +14,21 @@ bool PlayerBody::OnCreate() {
     // --- Load weapon idle / action animations ---
     // slot 1: Rifle / Shotgun
     {
-        std::string slot1WeaponName = "shotgun";
+        std::string slot1WeaponName = "rifle";
         WeaponAnimSet& set = weaponAnims[0];
         if (!set.idle.LoadFromFolder(renderer,
-            std::format("Graphics/PlayerSprites/shotgun/idle", slot1WeaponName), 0.08f)) {
-            std::cerr << "Failed to load shotgun idle animation\n";
+            std::format("Graphics/PlayerSprites/{}/idle", slot1WeaponName), 0.08f)) {
+            std::cerr << "Failed to load weapon 1 idle animation\n";
             return false;
         }
         if (!set.shoot.LoadFromFolder(renderer,
-            std::format("Graphics/PlayerSprites/shotgun/shoot", slot1WeaponName), 0.05f, false)) {
-            std::cerr << "Failed to load shotgun shoot animation\n";
+            std::format("Graphics/PlayerSprites/{}/shoot", slot1WeaponName), 0.05f, false)) {
+            std::cerr << "Failed to load weapon 1 shoot animation\n";
             return false;
         }
         if (!set.reload.LoadFromFolder(renderer,
-            std::format("Graphics/PlayerSprites/shotgun/reload", slot1WeaponName), 0.1f, false)) {
-            std::cerr << "Failed to load shotgun reload animation\n";
+            std::format("Graphics/PlayerSprites/{}/reload", slot1WeaponName), 0.1f, false)) {
+            std::cerr << "Failed to load weapon 1 reload animation\n";
             return false;
         }
 
@@ -99,7 +99,7 @@ bool PlayerBody::OnCreate() {
 }
 
 void PlayerBody::InitWeapons() {
-    weapons[0] = new Shotgun(this);          // main slot (1)
+    weapons[0] = new Rifle(this);          // main slot (1)
     weapons[1] = new Handgun(this); // 2
     weapons[2] = new Knife(this);  // 3
     currentWeaponIndex = 1;        // start with pistol for example
