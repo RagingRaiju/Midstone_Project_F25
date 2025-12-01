@@ -16,6 +16,7 @@ public:
 	bool OnCreate();
 	void OnDestroy();
 	SDL_Window* GetSDL_Window();
+	SDL_Renderer* GetRenderer() const;
 };
 
 #endif

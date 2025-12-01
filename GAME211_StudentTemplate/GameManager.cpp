@@ -34,7 +34,21 @@ bool GameManager::OnCreate() {
 		return false;
 	}
 
-    // select scene for specific assignment
+    SDL_Surface* bgSurface = IMG_Load("graphics/background_sheet.png");
+    if (!bgSurface) {
+        std::cerr << "Failed to load background: " << SDL_GetError() << std::endl;
+        OnDestroy();
+        return false;
+    }
+
+    backgroundTexture = SDL_CreateTextureFromSurface(windowPtr->GetRenderer(), bgSurface);
+    SDL_FreeSurface(bgSurface);
+
+    if (!backgroundTexture) {
+        std::cerr << "Failed to create background texture: " << SDL_GetError() << std::endl;
+        OnDestroy();
+        return false;
+    }
 
     currentScene = new Scene1(windowPtr->GetSDL_Window(), this);
     

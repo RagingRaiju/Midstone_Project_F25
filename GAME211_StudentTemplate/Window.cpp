@@ -89,3 +89,8 @@ Window::~Window(){}
 SDL_Window* Window::GetSDL_Window() {
 	return window;
 }
+
+SDL_Renderer* Window::GetRenderer() const
+{
+    return renderer;
+}

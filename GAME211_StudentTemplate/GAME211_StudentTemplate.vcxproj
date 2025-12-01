@@ -151,7 +151,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\shaya\Desktop\Game-Programming\Semester3\Game-211\GameDev\SDL\include\SDL3;C:\Users\shaya\Desktop\Game-Programming\Semester3\Game-211\GameDev\SDL\include;C:\Users\shaya\Desktop\Game-Programming\Semester3\Game-211\GameDev\OpenGL\include;C:\Users\shaya\Desktop\Game-Programming\Semester3\Game-211\GameDev\MathLibrary\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\GameDevMidstone\SDL\include;C:\GameDevMidstone\SDL\include\SDL3;C:\GameDevMidstone\MathLibrary\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

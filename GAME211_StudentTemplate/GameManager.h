@@ -27,14 +27,14 @@ private:
 	bool isRunning;
 	class Scene *currentScene;
 
+	SDL_Texture* backgroundTexture;
+
 	// This might be unfamiliar
     class PlayerBody *player;
 
 	void handleEvents();
 	void LoadScene(int i);
 	bool ValidateCurrentScene();
-
-
 public:
 	GameManager();
 	~GameManager();
@@ -50,6 +50,7 @@ public:
     PlayerBody* getPlayer(){ return player; }
 	void RenderPlayer(float scale = 1.0f);
 	SDL_Renderer* getRenderer();
+	SDL_Texture* getBackgroundTexture() { return backgroundTexture; }
 
 	void Run();
     

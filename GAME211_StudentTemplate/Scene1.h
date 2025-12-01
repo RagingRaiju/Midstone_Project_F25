@@ -17,6 +17,9 @@ private:
 	Matrix4 projectionMatrix;	// set in OnCreate()
     Matrix4     inverseProjection;	// set in OnCreate()
 
+	// background rect to render the bg image on
+	SDL_FRect bgRect;
+
 	// BULLETS HANDLED BY SCENE (for cleanup, collisions, etc.)
 	std::vector<Bullet*> bullets;
 

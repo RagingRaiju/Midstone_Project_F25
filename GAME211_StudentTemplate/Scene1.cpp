@@ -40,6 +40,9 @@ bool Scene1::OnCreate() {
 	float bottom = cameraCenter.y - halfH;
 	float top = cameraCenter.y + halfH;
 
+	bgRect.x = 0.0f;
+	bgRect.y = 0.0f;
+
 	Matrix4 ortho = MMath::orthographic(left, right, bottom, top, 0.0f, 1.0f);
 	projectionMatrix = viewportMatrix * ortho;
 
@@ -103,8 +106,16 @@ void Scene1::UpdateCamera(float deltaTime) {
 }
 
 void Scene1::Render() {
+	int windowWidth, windowHeight;
+	SDL_GetWindowSize(window, &windowWidth, &windowHeight);
+
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
+
+	bgRect.w = static_cast<float>(windowWidth);  // full width
+	bgRect.h = static_cast<float>(windowHeight); // full height
+
+	SDL_RenderTexture(renderer, game->getBackgroundTexture(), nullptr, &bgRect);
 
 	// Draw bullets under player
 	for (Bullet* b : bullets) {
