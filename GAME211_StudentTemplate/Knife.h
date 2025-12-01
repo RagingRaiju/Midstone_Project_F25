@@ -6,8 +6,8 @@
 
 class Knife : public Weapon {
 public:
-    Knife(PlayerBody* owner_) :
-        Weapon(owner_, 40.0f, 0.6f, "Knife") {
+    Knife(Player* owner_) :
+        Weapon(owner_, 30.0f, 0.6f, "Knife") {
     }
 
     void Fire() override;

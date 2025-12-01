@@ -8,11 +8,11 @@
 
 using namespace MATH;
 
-class PlayerBody;
+class Player;
 
 class Weapon {
 protected:
-    PlayerBody* owner;
+    Player* owner;
 
     float damage;
     float cooldown;
@@ -21,7 +21,7 @@ protected:
     std::string weaponName;
 
 public:
-    Weapon(PlayerBody* owner_, float damage_, float cooldown_, const std::string& name_)
+    Weapon(Player* owner_, float damage_, float cooldown_, const std::string& name_)
         : owner(owner_), damage(damage_), cooldown(cooldown_),
         timeSinceLastShot(0.0f), weaponName(name_) {
     }

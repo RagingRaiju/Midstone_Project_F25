@@ -24,7 +24,7 @@ private:
     // NEW: for automatic fire
     bool triggerHeld = false;
 public:
-    Rifle(PlayerBody* owner_) :
+    Rifle(Player* owner_) :
         Weapon(owner_, damage, 0.1f, "Rifle") {
     }
 

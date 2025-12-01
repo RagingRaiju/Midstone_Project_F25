@@ -21,7 +21,7 @@ private:
     float timeSinceInitatedReload = 0.0f;
     bool reloading = false;
 public:
-    Handgun(PlayerBody* owner_) :
+    Handgun(Player* owner_) :
         Weapon(owner_, damage, 0.3f, "Handgun") {
     }
 

@@ -62,7 +62,7 @@ bool GameManager::OnCreate() {
     Vec3 velocity(0.0f, 0.0f, 0.0f);
     Vec3 acceleration(0.0f, 0.0f, 0.0f);
 
-    player = new PlayerBody
+    player = new Player
     (
         position,
         velocity,

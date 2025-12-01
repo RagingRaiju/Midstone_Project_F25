@@ -22,7 +22,7 @@ private:
     float timeSinceInitatedReload = 0.0f;
     bool reloading = false;
 public:
-    Shotgun(PlayerBody* owner_) :
+    Shotgun(Player* owner_) :
         Weapon(owner_, damage, 0.8f, "Shotgun") {
     }
 

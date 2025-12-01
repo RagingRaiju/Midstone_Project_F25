@@ -2,8 +2,8 @@
 *   Complete remake player class by Shayan Hamayun
 */
 
-#ifndef PLAYERBODY_H
-#define PLAYERBODY_H
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #define SDL_ENABLE_OLD_NAMES
 
@@ -22,7 +22,7 @@
 
 #include "SpriteAnimation.h"
 
-class PlayerBody : public Body
+class Player : public Body
 {
 protected:
     class GameManager* game;
@@ -75,7 +75,7 @@ private:
     Vec3  shotEnd;
 
 public:
-    PlayerBody() : Body{}
+    Player() : Body{}
     {
         game = nullptr;
         InitWeapons();
@@ -85,7 +85,7 @@ public:
     // Note the last parameter in this constructor!
     // Look in GameManager.cpp to see how this is called.
     // Look in .cpp file, at Render(), to see why game_ is a parameter.
-    PlayerBody(
+    Player(
         Vec3 pos_, Vec3 vel_, Vec3 accel_,
         float mass_,
         float radius_,
@@ -108,7 +108,7 @@ public:
         InitWeapons();
     }
 
-    ~PlayerBody() {
+    ~Player() {
         for (int i = 0; i < 3; ++i) {
             delete weapons[i];
             weapons[i] = nullptr;
@@ -140,4 +140,4 @@ public:
     bool moveRight = false;
 };
 
-#endif /* PLAYERBODY_H */
+#endif /* PLAYER_H */

@@ -8,7 +8,7 @@
 #include "Window.h"
 #include "Timer.h"
 #include "Scene.h"
-#include "PlayerBody.h"
+#include "Player.h"
 
 
 class GameManager {
@@ -30,7 +30,7 @@ private:
 	SDL_Texture* backgroundTexture;
 
 	// This might be unfamiliar
-    class PlayerBody *player;
+    class Player *player;
 
 	void handleEvents();
 	void LoadScene(int i);
@@ -47,7 +47,7 @@ public:
 	float getSceneHeight();
 	float getSceneWidth();
 	Matrix4 getProjectionMatrix();
-    PlayerBody* getPlayer(){ return player; }
+    Player* getPlayer(){ return player; }
 	void RenderPlayer(float scale = 1.0f);
 	SDL_Renderer* getRenderer();
 	SDL_Texture* getBackgroundTexture() { return backgroundTexture; }

@@ -2,20 +2,33 @@
 *   Complete remake of the Player class by Shayan Hamayun with sprite, animations, and etc.
 */
 
-#include "PlayerBody.h"
+#include "Player.h"
 #include "TextureHolder.h"
 #include <format>
 
 const float RUN_START_SPEED_SQ = 4.0f;  // must exceed this to go to run
 const float RUN_STOP_SPEED_SQ = 1.0f;  // must drop below this to go idle
 
-bool PlayerBody::OnCreate() {
+bool Player::OnCreate() {
     SDL_Renderer* renderer = game->getRenderer();
+
+    // --- Load feet animations ---
+    if (!feetIdleAnim.LoadFromFolder(renderer,
+        "Graphics/PlayerSprites/feet/idle", 0.08f)) {
+        std::cerr << "Failed to load feet idle animation\n";
+        return false;
+    }
+
+    if (!feetRunAnim.LoadFromFolder(renderer,
+        "Graphics/PlayerSprites/feet/run", 0.06f)) {
+        std::cerr << "Failed to load feet run animation\n";
+        return false;
+    }
 
     // --- Load weapon idle / action animations ---
     // slot 1: Rifle / Shotgun
     {
-        std::string slot1WeaponName = "rifle";
+        std::string slot1WeaponName = "shotgun";
         WeaponAnimSet& set = weaponAnims[0];
         if (!set.idle.LoadFromFolder(renderer,
             std::format("Graphics/PlayerSprites/{}/idle", slot1WeaponName), 0.08f)) {
@@ -98,20 +111,20 @@ bool PlayerBody::OnCreate() {
     return true;
 }
 
-void PlayerBody::InitWeapons() {
-    weapons[0] = new Rifle(this);          // main slot (1)
+void Player::InitWeapons() {
+    weapons[0] = new Shotgun(this);          // main slot (1)
     weapons[1] = new Handgun(this); // 2
     weapons[2] = new Knife(this);  // 3
     currentWeaponIndex = 1;        // start with pistol for example
 }
 
-void PlayerBody::SpawnBullet(const Vec3& startPos, const Vec3& dir, const float damage, float speed, float bulletLife) {
+void Player::SpawnBullet(const Vec3& startPos, const Vec3& dir, const float damage, float speed, float bulletLife) {
     if (game) {
         game->SpawnBullet(startPos, dir, damage, speed, bulletLife);
     }
 }
 
-void PlayerBody::Render(float scale) {
+void Player::Render(float scale) {
     SDL_Renderer* renderer = game->getRenderer();
     Matrix4 projectionMatrix = game->getProjectionMatrix();
 
@@ -146,7 +159,7 @@ void PlayerBody::Render(float scale) {
 }
 
 
-void PlayerBody::HandleEvents(const SDL_Event& event)
+void Player::HandleEvents(const SDL_Event& event)
 {
     if (event.type == SDL_EVENT_KEY_DOWN && !event.key.repeat) {
         switch (event.key.scancode) {
@@ -189,7 +202,7 @@ void PlayerBody::HandleEvents(const SDL_Event& event)
     }
 }
 
-void PlayerBody::Update(float deltaTime) {
+void Player::Update(float deltaTime) {
     // Start with no acceleration each frame
     Vec3 dir(0.0f, 0.0f, 0.0f);
     UpdateAimFromMouse();
@@ -259,7 +272,7 @@ void PlayerBody::Update(float deltaTime) {
     Body::Update(deltaTime);
 }
 
-void PlayerBody::UpdateAimFromMouse() {
+void Player::UpdateAimFromMouse() {
     // Get mouse in screen space
     float mx, my;
     SDL_GetMouseState(&mx, &my);
@@ -275,7 +288,7 @@ void PlayerBody::UpdateAimFromMouse() {
     }
 }
 
-void PlayerBody::PlayWeaponIdle() {
+void Player::PlayWeaponIdle() {
     WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
     activeWeaponAnim = &set.idle;
     weaponVisualState = WeaponVisualState::Idle;
@@ -283,7 +296,7 @@ void PlayerBody::PlayWeaponIdle() {
     weaponVisualDuration = 0.0f; // idle loops forever
 }
 
-void PlayerBody::PlayWeaponShoot() {
+void Player::PlayWeaponShoot() {
     WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
 
     if (!set.hasShoot) {
@@ -300,7 +313,7 @@ void PlayerBody::PlayWeaponShoot() {
         set.shoot.GetFrameCount() * set.shoot.GetFrameTime();
 }
 
-void PlayerBody::PlayWeaponReload() {
+void Player::PlayWeaponReload() {
     WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
 
     if (!set.hasReload) {
@@ -317,7 +330,7 @@ void PlayerBody::PlayWeaponReload() {
         set.reload.GetFrameCount() * set.reload.GetFrameTime();
 }
 
-void PlayerBody::PlayWeaponMelee() {
+void Player::PlayWeaponMelee() {
     WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
 
     if (!set.hasMelee) {
@@ -334,8 +347,7 @@ void PlayerBody::PlayWeaponMelee() {
         set.melee.GetFrameCount() * set.melee.GetFrameTime();
 }
 
-
-void PlayerBody::RegisterShotRay(const Vec3& start, const Vec3& end) {
+void Player::RegisterShotRay(const Vec3& start, const Vec3& end) {
     shotStart = start;
     shotEnd = end;
     shotRayTimer = 0.2f;

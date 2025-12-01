@@ -28,7 +28,7 @@ bool Scene1::OnCreate() {
 	viewportMatrix = MMath::viewportNDC(w, h);
 
 	// initial camera center at player
-	PlayerBody* player = game->getPlayer();
+	Player* player = game->getPlayer();
 	if (player) {
 		cameraCenter = player->getPos();
 	}
@@ -137,7 +137,7 @@ void Scene1::Update(const float deltaTime) {
 }
 
 void Scene1::UpdateCamera(float deltaTime) {
-	PlayerBody* player = game->getPlayer();
+	Player* player = game->getPlayer();
 	if (!player) return;
 
 	Vec3 target = player->getPos();

@@ -1,6 +1,6 @@
 #include "Rifle.h"
 #include "GameManager.h"
-#include "PlayerBody.h"
+#include "Player.h"
 #include <iostream>
 
 void Rifle::Reload() {
