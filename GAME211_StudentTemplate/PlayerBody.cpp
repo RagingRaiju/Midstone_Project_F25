@@ -33,6 +33,11 @@ bool PlayerBody::OnCreate() {
         std::cerr << "Failed to load handgun shoot animation\n";
         return false;
     }
+    if (!handgunReloadAnim.LoadFromFolder(renderer,
+        "Graphics/PlayerSprites/handgun/reload", 0.1f, false)) {
+        std::cerr << "Failed to load handgun reload animation\n";
+        return false;
+    }
 
     if (!knifeIdleAnim.LoadFromFolder(renderer,
         "Graphics/PlayerSprites/knife/idle", 0.08f)) {
@@ -54,7 +59,6 @@ bool PlayerBody::OnCreate() {
     image = nullptr;  // no longer used
     texture = nullptr;
     return true;
-
 }
 
 void PlayerBody::InitWeapons() {
@@ -188,7 +192,10 @@ void PlayerBody::Update(float deltaTime) {
     // Choose weapon animation based on weapon + visual state
     switch (currentWeaponIndex) {
     case 1: // pistol
-        if (weaponVisualState == WeaponVisualState::Shooting) {
+        if (weaponVisualState == WeaponVisualState::Reload) {
+            activeWeaponAnim = &handgunReloadAnim;
+        }
+        else if (weaponVisualState == WeaponVisualState::Shooting) {
             activeWeaponAnim = &handgunShootAnim;
         }
         else {
@@ -257,6 +264,14 @@ void PlayerBody::OnPistolFired() {
     weaponVisualDuration =
         handgunShootAnim.GetFrameCount() * handgunShootAnim.GetFrameTime();
     handgunShootAnim.Reset();
+}
+
+void PlayerBody::OnPistolReload() {
+    weaponVisualState = WeaponVisualState::Reload;
+    weaponVisualTimer = 0.0f;
+    weaponVisualDuration =
+        handgunReloadAnim.GetFrameCount() * handgunReloadAnim.GetFrameTime();
+    handgunReloadAnim.Reset();
 }
 
 void PlayerBody::OnKnifeMelee() {
