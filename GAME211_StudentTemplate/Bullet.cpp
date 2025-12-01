@@ -3,6 +3,7 @@
 
 Bullet::Bullet(const Vec3& startPos,
     const Vec3& direction,
+    const float damage,
     float speed,
     float maxLife)
     : Body(startPos,
@@ -13,6 +14,7 @@ Bullet::Bullet(const Vec3& startPos,
         0.0f,
         0.0f,
         0.0f),
+    dmg(damage),
     life(maxLife),
     alive(true)
 {

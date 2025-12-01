@@ -13,6 +13,7 @@ class Bullet : public Body {
 public:
     Bullet(const Vec3& startPos,
         const Vec3& direction,
+        const float damage,
         float speed,
         float maxLife);
 
@@ -24,6 +25,7 @@ public:
     bool IsAlive() const { return alive; }
 
 private:
+    float dmg;    // amount of damage the bullet deals
     float life;   // remaining lifetime in seconds
     bool  alive;  // false when bullet should be removed
 };

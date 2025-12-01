@@ -19,6 +19,11 @@ bool Scene1::OnCreate() {
 	int w, h;
 	SDL_GetWindowSize(window, &w, &h);
 
+	/* OLD CAMERA CODE FOR STATIC NO MOVEMENT CAMERA (Im using this as a moving camera and player doesn't look right when the map is a static background */
+	Matrix4 ndc = MMath::viewportNDC(w, h);
+	Matrix4 ortho = MMath::orthographic(0.0f, xAxis, 0.0f, yAxis, 0.0f, 1.0f);
+	projectionMatrix = ndc * ortho;
+
 	// keep this around
 	viewportMatrix = MMath::viewportNDC(w, h);
 
@@ -31,6 +36,7 @@ bool Scene1::OnCreate() {
 		cameraCenter = Vec3(0.0f, 0.0f, 0.0f);
 	}
 
+	/* THIS IS THE NEW MOVING CAMERA SYSTEM.
 	// build an initial projection
 	float halfW = xAxis * 0.5f;
 	float halfH = yAxis * 0.5f;
@@ -40,20 +46,12 @@ bool Scene1::OnCreate() {
 	float bottom = cameraCenter.y - halfH;
 	float top = cameraCenter.y + halfH;
 
-	bgRect.x = 0.0f;
-	bgRect.y = 0.0f;
-
 	Matrix4 ortho = MMath::orthographic(left, right, bottom, top, 0.0f, 1.0f);
 	projectionMatrix = viewportMatrix * ortho;
+	*/
 
-	//image = IMG_Load("pacman.png");
-	//texture = SDL_CreateTextureFromSurface(renderer, image);
-	image = TextureHolder::GetSurface("pacman.png");
-	texture = TextureHolder::GetTexture("pacman.png", renderer);
-
-
-	game->getPlayer()->setImage(image);
-	game->getPlayer()->setTexture(texture);
+	bgRect.x = 0.0f;
+	bgRect.y = 0.0f;
 
 	// Create a horde of zombies
 	numZombies = 10;
@@ -87,7 +85,6 @@ void Scene1::Update(const float deltaTime) {
 			zombies[i].Update(deltaTime, game->getPlayer()->getPos());
 		}
 	}
-}
 
 	// Remove dead bullets
 	bullets.erase(
@@ -103,7 +100,7 @@ void Scene1::Update(const float deltaTime) {
 		bullets.end()
 	);
 
-	UpdateCamera(deltaTime);
+	// UpdateCamera(deltaTime);
 }
 
 void Scene1::UpdateCamera(float deltaTime) {
@@ -150,8 +147,6 @@ void Scene1::Render() {
 
 	// render the player
 	game->RenderPlayer(0.5f);
-
-	game->RenderPlayer(0.10f);
 	
 		// Render zombies
 	for (int i = 0; i < numZombies; i++) {

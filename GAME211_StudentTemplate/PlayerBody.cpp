@@ -32,13 +32,7 @@ bool PlayerBody::OnCreate() {
             std::cerr << "Failed to load weapon 1 reload animation\n";
             return false;
         }
-    //image = IMG_Load("Pacman.png");
-    //if (image == nullptr) {
-    //    std::cerr << "Can't open the image" << std::endl;
-    //    return false;
-    //}
-
-        // optional offsets for all rifle/shotgun anims
+        // offsets for all rifle/shotgun anims
         set.idle.SetOffsetPixels(25.0f, -6.0f);
         set.shoot.SetOffsetPixels(25.0f, -6.0f);
         set.reload.SetOffsetPixels(25.0f, -6.0f);
@@ -101,14 +95,6 @@ bool PlayerBody::OnCreate() {
 
     image = nullptr;
     texture = nullptr;
-    SDL_Renderer* renderer = game->getRenderer();
-    //texture = SDL_CreateTextureFromSurface(renderer, image);
-    texture = TextureHolder::GetTexture("Pacman.png", renderer);
-    if (!texture) {
-        std::cerr << "Failed to create texture\n";
-        return false;
-    }
-
     return true;
 }
 

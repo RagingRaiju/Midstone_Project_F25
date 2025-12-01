@@ -31,7 +31,7 @@ private:
     void UpdateAimFromMouse();
 
     // Player Stats
-    float moveAccel = 80.0f;   // how strong the acceleration feels
+    float moveAccel = 72.0f;   // How strong the player accelerates
 
     // Weapons: 3 slots
     static const int MAX_WEAPONS = 3;
