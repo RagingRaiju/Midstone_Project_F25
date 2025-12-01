@@ -199,6 +199,7 @@ SDL_Renderer* GameManager::getRenderer()
     SDL_Window* window = currentScene->getWindow();
     SDL_Renderer* renderer = SDL_GetRenderer(window);
     return renderer;
+
 }
 
 // This might be unfamiliar
@@ -239,4 +240,4 @@ bool GameManager::ValidateCurrentScene()
         return false;
     }
     return true;
-}
+}   
