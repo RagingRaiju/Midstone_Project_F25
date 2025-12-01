@@ -1,9 +1,9 @@
-#include "Handgun.h"
+#include "Rifle.h"
 #include "GameManager.h"
 #include "PlayerBody.h"
 #include <iostream>
 
-void Handgun::Reload() {
+void Rifle::Reload() {
     if (reloading) return; // return if its already reloading
     if (magRemaining == magSize) return;
 
@@ -12,24 +12,31 @@ void Handgun::Reload() {
     owner->PlayWeaponReload();
 }
 
-void Handgun::Update(float deltaTime) {
-    // base Weapon cooldown
-    Weapon::Update(deltaTime);
+void Rifle::Update(float deltaTime) {
+    // base Weapon cooldown timer
+    Weapon::Update(deltaTime);  // increases timeSinceLastShot up to cooldown
 
     // handle reload timing
     if (reloading) {
         timeSinceInitatedReload += deltaTime;
 
         if (timeSinceInitatedReload >= reloadTime) {
-            // reload finished
             magRemaining = magSize;
             reloading = false;
             timeSinceInitatedReload = 0.0f;
         }
     }
+
+    // automatic fire
+    if (triggerHeld && !reloading &&
+        timeSinceLastShot >= cooldown)
+    {
+        Fire(); // will decrement mag & maybe start reload
+        timeSinceLastShot = 0.0f;  // reset cooldown
+    }
 }
 
-void Handgun::Fire() {
+void Rifle::Fire() {
     if (!owner) return;
 
     // can’t fire while reloading
@@ -103,11 +110,21 @@ void Handgun::Fire() {
     // owner->RegisterShotRay(origin, end);
 }
 
-void Handgun::HandleEvents(const SDL_Event& event) {
-    // Let base class handle left-click firing, etc.
-    Weapon::HandleEvents(event);
+void Rifle::HandleEvents(const SDL_Event& event) {
+    // LMB pressed: start firing
+    if (event.type == SDL_EVENT_MOUSE_BUTTON_DOWN &&
+        event.button.button == SDL_BUTTON_LEFT)
+    {
+        triggerHeld = true;
+    }
+    // LMB released: stop firing
+    else if (event.type == SDL_EVENT_MOUSE_BUTTON_UP &&
+        event.button.button == SDL_BUTTON_LEFT)
+    {
+        triggerHeld = false;
+    }
 
-    // Extra handgun-specific input (e.g. reload on R)
+    // Reload on R
     if (event.type == SDL_EVENT_KEY_DOWN &&
         !event.key.repeat &&
         event.key.scancode == SDL_SCANCODE_R)

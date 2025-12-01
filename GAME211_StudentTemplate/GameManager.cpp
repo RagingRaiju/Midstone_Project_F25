@@ -88,10 +88,10 @@ bool GameManager::OnCreate() {
 	return true;
 }
 
-void GameManager::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed) {
+void GameManager::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife) {
     Scene1* s1 = dynamic_cast<Scene1*>(currentScene);
     if (s1) {
-        s1->SpawnBullet(startPos, dir, speed);
+        s1->SpawnBullet(startPos, dir, speed, bulletLife);
     }
 }
 

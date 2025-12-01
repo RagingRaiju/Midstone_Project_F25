@@ -15,6 +15,8 @@
 #include "GameManager.h"
 
 #include "Weapon.h"
+#include "Shotgun.h"
+#include "Rifle.h"
 #include "Handgun.h"
 #include "Knife.h"
 
@@ -28,23 +30,29 @@ private:
     void InitWeapons();
     void UpdateAimFromMouse();
 
-    // Weapons: 3 slots
-    Weapon* weapons[3] = { nullptr, nullptr, nullptr };
-    int currentWeaponIndex = 0;
-
-    // Stats
+    // Player Stats
     float moveAccel = 80.0f;   // how strong the acceleration feels
 
+    // Weapons: 3 slots
+    static const int MAX_WEAPONS = 3;
+    Weapon* weapons[MAX_WEAPONS] = { nullptr, nullptr, nullptr };
+    int currentWeaponIndex = 0;
+
     // Animations
+    // One set of animations per weapon slot
+    struct WeaponAnimSet {
+        SpriteAnimation idle;
+        SpriteAnimation shoot;
+        SpriteAnimation reload;
+        SpriteAnimation melee;
+        bool hasShoot = false;
+        bool hasReload = false;
+        bool hasMelee = false;
+    };
+    WeaponAnimSet weaponAnims[MAX_WEAPONS];
+
     SpriteAnimation feetIdleAnim;
     SpriteAnimation feetRunAnim;
-
-    SpriteAnimation handgunIdleAnim;
-    SpriteAnimation handgunShootAnim;
-    SpriteAnimation handgunReloadAnim;
-
-    SpriteAnimation knifeIdleAnim;
-    SpriteAnimation knifeMeleeAnim;
 
     SpriteAnimation* activeFeetAnim = nullptr;
     SpriteAnimation* activeWeaponAnim = nullptr;
@@ -116,13 +124,14 @@ public:
     void HandleEvents( const SDL_Event& event );
     void Update( float deltaTime ); 
 
-    // Weapon stuff
-    void OnPistolFired();
-    void OnPistolReload();
+    // Weapon animation helpers (used by all weapons)
+    void PlayWeaponIdle();
+    void PlayWeaponShoot();
+    void PlayWeaponReload();
+    void PlayWeaponMelee();
 
-    void OnKnifeMelee();
     void RegisterShotRay(const Vec3& start, const Vec3& end);
-    void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);
+    void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife);
 
     // Input state from events
     bool moveUp = false;

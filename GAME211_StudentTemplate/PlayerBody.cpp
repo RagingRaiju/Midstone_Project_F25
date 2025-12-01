@@ -3,6 +3,7 @@
 */
 
 #include "PlayerBody.h"
+#include <format>
 
 const float RUN_START_SPEED_SQ = 4.0f;  // must exceed this to go to run
 const float RUN_STOP_SPEED_SQ = 1.0f;  // must drop below this to go idle
@@ -10,67 +11,103 @@ const float RUN_STOP_SPEED_SQ = 1.0f;  // must drop below this to go idle
 bool PlayerBody::OnCreate() {
     SDL_Renderer* renderer = game->getRenderer();
 
-    // --- Load feet animations ---
-    if (!feetIdleAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/feet/idle", 0.08f)) {
-        std::cerr << "Failed to load feet idle animation\n";
-        return false;
-    }
-    if (!feetRunAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/feet/run", 0.06f)) {
-        std::cerr << "Failed to load feet run animation\n";
-        return false;
-    }
-
     // --- Load weapon idle / action animations ---
-    if (!handgunIdleAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/handgun/idle", 0.08f)) {
-        std::cerr << "Failed to load handgun idle animation\n";
-        return false;
-    }
-    if (!handgunShootAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/handgun/shoot", 0.05f, false)) {
-        std::cerr << "Failed to load handgun shoot animation\n";
-        return false;
-    }
-    if (!handgunReloadAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/handgun/reload", 0.1f, false)) {
-        std::cerr << "Failed to load handgun reload animation\n";
-        return false;
+    // slot 1: Rifle / Shotgun
+    {
+        std::string slot1WeaponName = "shotgun";
+        WeaponAnimSet& set = weaponAnims[0];
+        if (!set.idle.LoadFromFolder(renderer,
+            std::format("Graphics/PlayerSprites/shotgun/idle", slot1WeaponName), 0.08f)) {
+            std::cerr << "Failed to load shotgun idle animation\n";
+            return false;
+        }
+        if (!set.shoot.LoadFromFolder(renderer,
+            std::format("Graphics/PlayerSprites/shotgun/shoot", slot1WeaponName), 0.05f, false)) {
+            std::cerr << "Failed to load shotgun shoot animation\n";
+            return false;
+        }
+        if (!set.reload.LoadFromFolder(renderer,
+            std::format("Graphics/PlayerSprites/shotgun/reload", slot1WeaponName), 0.1f, false)) {
+            std::cerr << "Failed to load shotgun reload animation\n";
+            return false;
+        }
+
+        // optional offsets for all rifle/shotgun anims
+        set.idle.SetOffsetPixels(25.0f, -6.0f);
+        set.shoot.SetOffsetPixels(25.0f, -6.0f);
+        set.reload.SetOffsetPixels(25.0f, -6.0f);
+
+        set.hasShoot = true;
+        set.hasReload = true;
+        set.hasMelee = false;
     }
 
-    if (!knifeIdleAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/knife/idle", 0.08f)) {
-        std::cerr << "Failed to load knife idle animation\n";
-        return false;
+    // slot 2: Handgun
+    {
+        WeaponAnimSet& set = weaponAnims[1];
+
+        if (!set.idle.LoadFromFolder(renderer,
+            "Graphics/PlayerSprites/handgun/idle", 0.08f)) {
+            std::cerr << "Failed to load handgun idle animation\n";
+            return false;
+        }
+        if (!set.shoot.LoadFromFolder(renderer,
+            "Graphics/PlayerSprites/handgun/shoot", 0.05f, false)) {
+            std::cerr << "Failed to load handgun shoot animation\n";
+            return false;
+        }
+        if (!set.reload.LoadFromFolder(renderer,
+            "Graphics/PlayerSprites/handgun/reload", 0.1f, false)) {
+            std::cerr << "Failed to load handgun reload animation\n";
+            return false;
+        }
+
+        set.hasShoot = true;
+        set.hasReload = true;
+        set.hasMelee = false;
     }
-    if (!knifeMeleeAnim.LoadFromFolder(renderer,
-        "Graphics/PlayerSprites/knife/meleeattack", 0.04f, false)) {
-        std::cerr << "Failed to load knife melee animation\n";
-        return false;
+
+    // slot 3: Knife
+    {
+        WeaponAnimSet& set = weaponAnims[2];
+
+        if (!set.idle.LoadFromFolder(renderer,
+            "Graphics/PlayerSprites/knife/idle", 0.08f)) {
+            std::cerr << "Failed to load knife idle animation\n";
+            return false;
+        }
+        if (!set.melee.LoadFromFolder(renderer,
+            "Graphics/PlayerSprites/knife/meleeattack", 0.04f, false)) {
+            std::cerr << "Failed to load knife melee animation\n";
+            return false;
+        }
+        set.melee.SetOffsetPixels(19.0f, 35.0f);
+
+        set.hasShoot = false;
+        set.hasReload = false;
+        set.hasMelee = true;
     }
-    knifeMeleeAnim.SetOffsetPixels(19.0f, 35.0f);
 
     // Set active animations & state
     activeFeetAnim = &feetIdleAnim;
-    activeWeaponAnim = &handgunIdleAnim;        // matches currentWeaponIndex = 1
-    weaponVisualState = WeaponVisualState::Idle;
+    currentWeaponIndex = 1;                // pistol start
+    PlayWeaponIdle();                      // sets activeWeaponAnim etc.
 
-    image = nullptr;  // no longer used
+    image = nullptr;
     texture = nullptr;
     return true;
 }
 
 void PlayerBody::InitWeapons() {
-    weapons[0] = nullptr;          // main slot (1)
+    weapons[0] = new Shotgun(this);          // main slot (1)
     weapons[1] = new Handgun(this); // 2
     weapons[2] = new Knife(this);  // 3
     currentWeaponIndex = 1;        // start with pistol for example
 }
 
-void PlayerBody::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed) {
+void PlayerBody::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife) {
     if (game) {
-        game->SpawnBullet(startPos, dir, speed);
+        game->SpawnBullet(startPos, dir, speed, bulletLife);
     }
 }
 
@@ -119,9 +156,18 @@ void PlayerBody::HandleEvents(const SDL_Event& event)
         case SDL_SCANCODE_D: moveRight = true;  break;
 
         // Weapon slot switching
-        case SDL_SCANCODE_1: currentWeaponIndex = 0; break;
-        case SDL_SCANCODE_2: currentWeaponIndex = 1; break;
-        case SDL_SCANCODE_3: currentWeaponIndex = 2; break;
+        case SDL_SCANCODE_1:
+            currentWeaponIndex = 0;
+            PlayWeaponIdle();
+            break;
+        case SDL_SCANCODE_2:
+            currentWeaponIndex = 1;
+            PlayWeaponIdle();
+            break;
+        case SDL_SCANCODE_3:
+            currentWeaponIndex = 2;
+            PlayWeaponIdle();
+            break;
 
         default: break;
         }
@@ -189,40 +235,11 @@ void PlayerBody::Update(float deltaTime) {
         }
     }
 
-    // Choose weapon animation based on weapon + visual state
-    switch (currentWeaponIndex) {
-    case 1: // pistol
-        if (weaponVisualState == WeaponVisualState::Reload) {
-            activeWeaponAnim = &handgunReloadAnim;
-        }
-        else if (weaponVisualState == WeaponVisualState::Shooting) {
-            activeWeaponAnim = &handgunShootAnim;
-        }
-        else {
-            activeWeaponAnim = &handgunIdleAnim;
-        }
-        break;
-    case 2: // knife
-        if (weaponVisualState == WeaponVisualState::Melee ||
-            weaponVisualState == WeaponVisualState::Shooting) {
-            activeWeaponAnim = &knifeMeleeAnim;
-        }
-        else {
-            activeWeaponAnim = &knifeIdleAnim;
-        }
-        break;
-    default:
-        activeWeaponAnim = nullptr;
-        break;
-    }
-
-    // Update weapon visual timer
+    // Weapon visual timer: when a one-shot anim finishes, go back to idle
     if (weaponVisualState != WeaponVisualState::Idle) {
         weaponVisualTimer += deltaTime;
         if (weaponVisualTimer >= weaponVisualDuration) {
-            weaponVisualState = WeaponVisualState::Idle;
-            weaponVisualTimer = 0.0f;
-            weaponVisualDuration = 0.0f;
+            PlayWeaponIdle();
         }
     }
 
@@ -258,29 +275,65 @@ void PlayerBody::UpdateAimFromMouse() {
     }
 }
 
-void PlayerBody::OnPistolFired() {
+void PlayerBody::PlayWeaponIdle() {
+    WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
+    activeWeaponAnim = &set.idle;
+    weaponVisualState = WeaponVisualState::Idle;
+    weaponVisualTimer = 0.0f;
+    weaponVisualDuration = 0.0f; // idle loops forever
+}
+
+void PlayerBody::PlayWeaponShoot() {
+    WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
+
+    if (!set.hasShoot) {
+        PlayWeaponIdle();
+        return;
+    }
+
+    activeWeaponAnim = &set.shoot;
+    set.shoot.Reset();
+
     weaponVisualState = WeaponVisualState::Shooting;
     weaponVisualTimer = 0.0f;
     weaponVisualDuration =
-        handgunShootAnim.GetFrameCount() * handgunShootAnim.GetFrameTime();
-    handgunShootAnim.Reset();
+        set.shoot.GetFrameCount() * set.shoot.GetFrameTime();
 }
 
-void PlayerBody::OnPistolReload() {
+void PlayerBody::PlayWeaponReload() {
+    WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
+
+    if (!set.hasReload) {
+        PlayWeaponIdle();
+        return;
+    }
+
+    activeWeaponAnim = &set.reload;
+    set.reload.Reset();
+
     weaponVisualState = WeaponVisualState::Reload;
     weaponVisualTimer = 0.0f;
     weaponVisualDuration =
-        handgunReloadAnim.GetFrameCount() * handgunReloadAnim.GetFrameTime();
-    handgunReloadAnim.Reset();
+        set.reload.GetFrameCount() * set.reload.GetFrameTime();
 }
 
-void PlayerBody::OnKnifeMelee() {
+void PlayerBody::PlayWeaponMelee() {
+    WeaponAnimSet& set = weaponAnims[currentWeaponIndex];
+
+    if (!set.hasMelee) {
+        PlayWeaponIdle();
+        return;
+    }
+
+    activeWeaponAnim = &set.melee;
+    set.melee.Reset();
+
     weaponVisualState = WeaponVisualState::Melee;
     weaponVisualTimer = 0.0f;
     weaponVisualDuration =
-        knifeMeleeAnim.GetFrameCount() * knifeMeleeAnim.GetFrameTime();
-    knifeMeleeAnim.Reset();
+        set.melee.GetFrameCount() * set.melee.GetFrameTime();
 }
+
 
 void PlayerBody::RegisterShotRay(const Vec3& start, const Vec3& end) {
     shotStart = start;

@@ -45,7 +45,7 @@ public:
     Matrix4 getProjectionMatrix() { return projectionMatrix; }
 	Matrix4 getInverseMatrix() { return inverseProjection; }
 
-	void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed);
+	void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife);
 };
 
 #endif

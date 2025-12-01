@@ -136,8 +136,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 	game->getPlayer()->HandleEvents(event);
 }
 
-void Scene1::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed) {
-	const float bulletLife = 2.0f; // seconds, can later be per-weapon too
-
+void Scene1::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife) {
 	bullets.push_back(new Bullet(startPos, dir, speed, bulletLife));
 }

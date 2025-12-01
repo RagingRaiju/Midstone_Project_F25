@@ -26,7 +26,9 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Handgun.cpp" />
     <ClCompile Include="PlayerBody.cpp" />
+    <ClCompile Include="Rifle.cpp" />
     <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="Shotgun.cpp" />
     <ClCompile Include="SpriteAnimation.cpp" />
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -39,8 +41,10 @@
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Handgun.h" />
     <ClInclude Include="PlayerBody.h" />
+    <ClInclude Include="Rifle.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
+    <ClInclude Include="Shotgun.h" />
     <ClInclude Include="SpriteAnimation.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Timer.h" />

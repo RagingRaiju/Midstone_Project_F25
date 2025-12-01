@@ -6,7 +6,7 @@ void Knife::Fire() {
     if (!owner) return;
 
     // Trigger melee animation
-    owner->OnKnifeMelee();
+    owner->PlayWeaponMelee();
 
     // Short ray in facing direction (melee reach)
     Vec3 origin = owner->getPos();
