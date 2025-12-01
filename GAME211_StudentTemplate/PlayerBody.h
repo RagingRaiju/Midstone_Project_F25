@@ -131,7 +131,7 @@ public:
     void PlayWeaponMelee();
 
     void RegisterShotRay(const Vec3& start, const Vec3& end);
-    void SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife);
+    void SpawnBullet(const Vec3& startPos, const Vec3& dir, const float damage, float speed, float bulletLife);
 
     // Input state from events
     bool moveUp = false;

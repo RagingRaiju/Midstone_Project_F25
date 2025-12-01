@@ -8,6 +8,7 @@ class Shotgun : public Weapon {
 private:
     const float bulletSpeed = 52.0f;
     const float bulletLife = 0.11f;
+    const float damage = 12.5f; // 100 / 8 = 12.5; meaning if all 8 pellets hit an enemy thats 100 dmg.
     const float pelletCount = 8; // how many pellets per shell
 
     const float forwardOffset = 1.9f; // how far out from the body
@@ -22,8 +23,7 @@ private:
     bool reloading = false;
 public:
     Shotgun(PlayerBody* owner_) :
-        // 100 / 8 = 12.5; meaning if all 8 pellets hit an enemy thats 100 dmg.
-        Weapon(owner_, 12.5f, 0.8f, "Shotgun") {
+        Weapon(owner_, damage, 0.8f, "Shotgun") {
     }
 
     void Update(float deltaTime) override;

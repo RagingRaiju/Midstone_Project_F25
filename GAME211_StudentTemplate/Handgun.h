@@ -8,6 +8,7 @@ class Handgun : public Weapon {
 private:
     const float bulletSpeed = 60.0f;
     const float bulletLife = 1.2f;
+    const float damage = 14.0f;
 
     const float forwardOffset = 1.25f; // how far out from the body
     const float sideOffset = 0.675f; // how far to the right of the center
@@ -21,7 +22,7 @@ private:
     bool reloading = false;
 public:
     Handgun(PlayerBody* owner_) :
-        Weapon(owner_, 14.0f, 0.3f, "Handgun") {
+        Weapon(owner_, damage, 0.3f, "Handgun") {
     }
 
     void Update(float deltaTime) override;

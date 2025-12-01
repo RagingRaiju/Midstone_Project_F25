@@ -105,9 +105,9 @@ void PlayerBody::InitWeapons() {
     currentWeaponIndex = 1;        // start with pistol for example
 }
 
-void PlayerBody::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife) {
+void PlayerBody::SpawnBullet(const Vec3& startPos, const Vec3& dir, const float damage, float speed, float bulletLife) {
     if (game) {
-        game->SpawnBullet(startPos, dir, speed, bulletLife);
+        game->SpawnBullet(startPos, dir, damage, speed, bulletLife);
     }
 }
 

@@ -95,7 +95,7 @@ void Handgun::Fire() {
     }
 
     // Spawn bullet from muzzle toward cursor
-    owner->SpawnBullet(muzzlePos, bulletDir, bulletSpeed, bulletLife);
+    owner->SpawnBullet(muzzlePos, bulletDir, damage, bulletSpeed, bulletLife);
 
     // debug ray
     // float maxDist = 50.0f;

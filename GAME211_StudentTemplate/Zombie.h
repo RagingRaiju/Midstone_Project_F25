@@ -24,9 +24,9 @@ private:
     // --- Baseline health values for zombie archetypes ---
     // These constants set the initial health pool for each type.
     // Actual health decreases during gameplay as zombies take damage.
-    const float BLOATER_HEALTH = 5.0f;   // High endurance
-    const float CHASER_HEALTH = 1.0f;   // Low endurance
-    const float CRAWLER_HEALTH = 3.0f;   // Moderate endurance
+    const float BLOATER_HEALTH = 150.0f;   // High endurance
+    const float CHASER_HEALTH = 50.0f;   // Low endurance
+    const float CRAWLER_HEALTH = 100.0f;   // Moderate endurance
 
     // --- Variance speed values for varying individual velocity ---
     const int MAX_VARIANCE = 30;
@@ -76,7 +76,7 @@ public:
     }
 
     // Handle bullet collision with zombie
-    bool Hit();
+    bool Hit(float damage);
 
     // Find out if zombie is alive
     bool IsAlive();

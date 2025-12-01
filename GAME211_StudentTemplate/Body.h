@@ -46,6 +46,7 @@ public:
     virtual float getOrientation() const { return orientation; }
     virtual float getRotation() const { return rotation; }
     virtual float getAngular() const { return angular; }
+    virtual float getRadius() const { return radius; }
 
     virtual void setImage(SDL_Surface* image_) 
     {

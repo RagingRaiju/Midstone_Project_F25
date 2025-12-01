@@ -135,7 +135,7 @@ void Shotgun::Fire() {
             + right * sideJitter
             + forward * forwardJitter;
 
-        owner->SpawnBullet(pelletStart, dirRotated, bulletSpeed, bulletLife);
+        owner->SpawnBullet(pelletStart, dirRotated, damage, bulletSpeed, bulletLife);
     }
 
     // debug ray

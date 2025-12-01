@@ -86,6 +86,39 @@ void Scene1::Update(const float deltaTime) {
 		}
 	}
 
+	// --- bullet vs zombie collisions ---
+	for (Bullet* b : bullets) {
+		if (!b || !b->IsAlive()) continue;
+
+		Vec3 bp = b->getPos();
+		float br = b->getRadius();
+
+		for (int i = 0; i < numZombies; i++) {
+			if (!zombies[i].IsAlive()) continue;
+
+			Vec3 zp = zombies[i].getPos();
+			float zr = zombies[i].getRadius();
+
+			Vec3 diff = zp - bp;
+			float distSq = VMath::dot(diff, diff);
+			float radSum = br + zr;
+
+			if (distSq <= radSum * radSum) {
+				// bullet hit this zombie
+				bool died = zombies[i].Hit(b->GetDamage());
+
+				if (died) {
+					numZombiesAlive--;
+					// you could spawn blood splatters or sounds here
+				}
+
+				// bullet is consumed when it hits something
+				b->MarkDead();
+				break; // stop checking this bullet against other zombies
+			}
+		}
+	}
+
 	// Remove dead bullets
 	bullets.erase(
 		std::remove_if(bullets.begin(), bullets.end(),
@@ -164,6 +197,6 @@ void Scene1::HandleEvents(const SDL_Event& event)
 	game->getPlayer()->HandleEvents(event);
 }
 
-void Scene1::SpawnBullet(const Vec3& startPos, const Vec3& dir, float speed, float bulletLife) {
-	bullets.push_back(new Bullet(startPos, dir, speed, bulletLife));
+void Scene1::SpawnBullet(const Vec3& startPos, const Vec3& dir, const float damage, float speed, float bulletLife) {
+	bullets.push_back(new Bullet(startPos, dir, damage, speed, bulletLife));
 }

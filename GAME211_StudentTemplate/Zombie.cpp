@@ -5,9 +5,9 @@
 #include <MMath.h>
 #include <SDL.h>
 
-bool Zombie::Hit()
+bool Zombie::Hit(float damage)
 {
-    health--;
+    health -= damage;
     if (health < 0) {
         // Dead
         alive = false;
@@ -35,6 +35,7 @@ bool Zombie::OnCreate(float startX, float startY, int type, int seed) {
             std::cerr << "Failed to create texture\n";
             return false;
         }
+        radius = 2.0f;
 		break;
 
 	case 1:
@@ -44,6 +45,7 @@ bool Zombie::OnCreate(float startX, float startY, int type, int seed) {
             std::cerr << "Failed to create texture\n";
             return false;
         }
+        radius = 0.5f;
 		break;
 
 	case 2:
@@ -53,6 +55,7 @@ bool Zombie::OnCreate(float startX, float startY, int type, int seed) {
             std::cerr << "Failed to create texture\n";
             return false;
         }
+        radius = 1.0f;
         break;
 	}
 

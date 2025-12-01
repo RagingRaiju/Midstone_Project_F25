@@ -21,11 +21,14 @@ public:
 
     void Update(float deltaTime) override;
     void Render(SDL_Renderer* renderer, const Matrix4& projection) const;
-
     bool IsAlive() const { return alive; }
 
+    // Zombie Handling
+    float GetDamage() const { return dmg; }
+    void MarkDead() { alive = false; }
+
 private:
-    float dmg;    // amount of damage the bullet deals
+    const float dmg;    // amount of damage the bullet deals
     float life;   // remaining lifetime in seconds
     bool  alive;  // false when bullet should be removed
 };
