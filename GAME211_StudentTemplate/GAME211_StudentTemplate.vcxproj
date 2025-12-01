@@ -33,6 +33,8 @@
     <ClCompile Include="TextureHolder.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="Zombie.cpp" />
+    <ClCompile Include="ZombieHorde.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Body.h" />
@@ -50,6 +52,8 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Window.h" />
+    <ClInclude Include="Zombie.h" />
+    <ClInclude Include="ZombieHorde.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

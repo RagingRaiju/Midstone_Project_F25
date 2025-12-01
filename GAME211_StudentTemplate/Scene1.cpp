@@ -46,13 +46,30 @@ bool Scene1::OnCreate() {
 	Matrix4 ortho = MMath::orthographic(left, right, bottom, top, 0.0f, 1.0f);
 	projectionMatrix = viewportMatrix * ortho;
 
-	/// Turn on the SDL imaging subsystem
-	//IMG_Init(IMG_INIT_PNG);
+	//image = IMG_Load("pacman.png");
+	//texture = SDL_CreateTextureFromSurface(renderer, image);
+	image = TextureHolder::GetSurface("pacman.png");
+	texture = TextureHolder::GetTexture("pacman.png", renderer);
+
+
+	game->getPlayer()->setImage(image);
+	game->getPlayer()->setTexture(texture);
+
+	// Create a horde of zombies
+	numZombies = 10;
+
+	// Delete the previously allocated memory (if it exists)
+	delete[] zombies;
+	ZombieHorde hordeMaker;
+	zombies = hordeMaker.CreateHorde(numZombies, game->getPlayer()->getPos(), game, renderer);
+	numZombiesAlive = numZombies;
 
 	return true;
 }
 
-void Scene1::OnDestroy() {}
+void Scene1::OnDestroy() {
+	delete[] zombies;
+}
 
 void Scene1::Update(const float deltaTime) {
 	// Update player
@@ -64,6 +81,13 @@ void Scene1::Update(const float deltaTime) {
 			b->Update(deltaTime);
 		}
 	}
+
+	for (int i = 0; i < numZombies; i++) {
+		if (zombies[i].IsAlive()) {
+			zombies[i].Update(deltaTime, game->getPlayer()->getPos());
+		}
+	}
+}
 
 	// Remove dead bullets
 	bullets.erase(
@@ -126,6 +150,15 @@ void Scene1::Render() {
 
 	// render the player
 	game->RenderPlayer(0.5f);
+
+	game->RenderPlayer(0.10f);
+	
+		// Render zombies
+	for (int i = 0; i < numZombies; i++) {
+		if (zombies[i].IsAlive()) {
+			zombies[i].Render(1.0f); // pass scale factor
+		}
+	}
 
 	SDL_RenderPresent(renderer);
 }

@@ -27,10 +27,12 @@ public:
 	// Retrieves a texture by filename.
 	// - If the texture is already cached, returns the existing SDL_Texture*.
 	// - If not cached, loads the image file into an SDL_Surface,
-	// creates a GPU texture with the provided renderer,
-	// stores it in the map for reuse, and returns the new SDL_Texture*.
-	// This ensures textures are loaded only once and shared across game objects.
+	// - creates a GPU texture with the provided renderer,
+	// - stores it in the map for reuse, and returns the new SDL_Texture*.
+	// - This ensures textures are loaded only once and shared across game objects.
 	static SDL_Texture* GetTexture(const std::string& filename, SDL_Renderer* renderer);
+
+	static SDL_Surface* GetSurface(const std::string& filename);
 
 	// Destructor for TextureHolder.
 	// Iterates through all cached textures in mapTextures,
@@ -38,6 +40,7 @@ public:
 	// then clears the map to prevent dangling pointers.
 	// Ensures proper cleanup of all textures when the game or scene ends.
 	~TextureHolder();
+
 };
 
 #endif // TEXTUREHOLDER_H

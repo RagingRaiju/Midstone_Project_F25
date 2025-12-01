@@ -30,6 +30,17 @@ SDL_Texture* TextureHolder::GetTexture(std::string const& filename, SDL_Renderer
 	}
 }
 
+SDL_Surface* TextureHolder::GetSurface(const std::string& filename)
+{
+	SDL_Surface* image = IMG_Load(filename.c_str());
+	if (!image) {
+		// Log error
+		SDL_Log("Failed to load image: %s", filename.c_str());
+		return nullptr;
+	}
+	return image;
+}
+
 TextureHolder::~TextureHolder() {
 	auto& m = textureHolderInstance->mapTextures;
 	for (auto& pair : m) {

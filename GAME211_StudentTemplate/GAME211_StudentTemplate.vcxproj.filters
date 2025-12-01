@@ -51,6 +51,7 @@
     <ClCompile Include="TextureHolder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="SpriteAnimation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -62,6 +63,13 @@
     </ClCompile>
     <ClCompile Include="Shotgun.cpp">
       <Filter>Source Files\Weapons</Filter>
+=======
+    <ClCompile Include="Zombie.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ZombieHorde.cpp">
+      <Filter>Source Files</Filter>
+>>>>>>> 4ed6ae0 (Implement Zombie class and horde system: created archetypes, spawned horde, integrated into scene, integrated texture holder into playerBody)
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -98,6 +106,7 @@
     <ClInclude Include="TextureHolder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="SpriteAnimation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -109,6 +118,13 @@
     </ClInclude>
     <ClInclude Include="Shotgun.h">
       <Filter>Header Files\Weapons</Filter>
+=======
+    <ClInclude Include="Zombie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ZombieHorde.h">
+      <Filter>Header Files</Filter>
+>>>>>>> 4ed6ae0 (Implement Zombie class and horde system: created archetypes, spawned horde, integrated into scene, integrated texture holder into playerBody)
     </ClInclude>
   </ItemGroup>
 </Project>
